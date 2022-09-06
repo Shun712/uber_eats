@@ -31,10 +31,10 @@ function App() {
               path="/orders">
             <Orders />
           </Route>
+            {/* コンポーネントにmatchというpropsを渡しながら、設定したPATHに対応するリクエストがあった場合にパラメーターと一緒にコンポーネントをレンダリングする */}
           <Route
               exact
               path="/restaurants/:restaurantsId/foods"
-              {/* コンポーネントにmatchというpropsを渡しながら、設定したPATHに対応するリクエストがあった場合にパラメーターと一緒にコンポーネントをレンダリングする */}
               render={({ match }) =>
                   <Foods
                       match={match}
