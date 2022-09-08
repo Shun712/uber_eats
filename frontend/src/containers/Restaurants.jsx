@@ -1,10 +1,19 @@
-import React, {Fragment, useEffect} from "react";
+import React, {Fragment, useReducer, useEffect} from "react";
 
 // npmでインストールしたstyled-componentsを使うことができる
 import styled from 'styled-components';
 
 // api
 import {fetchRestaurants} from "../apis/restaurants";
+
+
+// reducers
+import {
+    initialState,
+    restaurantsActionTypes,
+    restaurantsReducer,
+    } from '../reducers/resutaurants';
+
 
 // images
 import MainLogo from '../images/logo.png';
@@ -29,10 +38,21 @@ const MainCover = styled.img`
 `;
 
 export const Restaurants = () => {
+    // stateは現在の状態、dispatchは更新関数
+    // restaurantsState、restaurantsDispatchと命名も可
+    const [state, dispatch] = useReducer(restaurantsReducer, initialState);
+
     useEffect(() => {
+        dispatch({ type: restaurantsActionTypes.FETCHING });
         fetchRestaurants()
             .then((data) =>
-                console.log(data)
+                dispatch({
+                  type: restaurantsActionTypes.FETCH_SUCCESS,
+                  //  payloadとは通信に含まれるデータのことを「ペイロードデータ」ということから
+                  payload: {
+                      restaurants: data.restaurants
+                  }
+                })
             )
     }, [])
 
@@ -44,6 +64,13 @@ export const Restaurants = () => {
             <MainCoverImageWrapper>
                 <MainCover src={MainCoverImage} alt="main cover" />
             </MainCoverImageWrapper>
+            {
+                state.restaurantsList.map(restaurant =>
+                <div key={restaurant.id}>
+                    {restaurant.name}
+                </div>
+                )
+            }
         </Fragment>
     )
 }
