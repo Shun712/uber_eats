@@ -1,6 +1,10 @@
 import React, { Fragment, useEffect, useReducer, useState } from "react";
 import styled from 'styled-components';
-import { Link } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
+
+import { NewOrderConfirmDialog } from '../components/NewOrderConfirmDialog';
+import { postLineFoods, replaceLineFoods } from '../apis/line_foods';
+import { HTTP_STATUS_CODE } from '../constants';
 
 // reducers
 import {
@@ -66,14 +70,45 @@ export const Foods = ({
     // matchオブジェクトを受け取る
     match
     }) => {
+    const history = useHistory();
     const [foodsState, dispatch] = useReducer(foodsReducer, foodsInitialState);
 
     const initialState = {
         isOpenOrderDialog: false,
         selectedFood: null,
         selectedFoodCount: 1,
+        isOpenNewOrderDialog: false,
+        existingResutaurautName: '',
+        newResutaurautName: '',
     }
     const [state, setState] = useState(initialState);
+
+    const submitOrder = () => {
+        postLineFoods({
+            foodId: state.selectedFood.id,
+            count: state.selectedFoodCount,
+        }).then(() => history.push('/orders'))
+            .catch((e) => {
+                if (e.response.status === HTTP_STATUS_CODE.NOT_ACCEPTABLE) {
+                    setState({
+                        ...state,
+                        isOpenOrderDialog: false,
+                        isOpenNewOrderDialog: true,
+                        existingResutaurautName: e.response.data.existing_restaurant,
+                        newResutaurautName: e.response.data.new_restaurant,
+                    })
+                } else {
+                    throw e;
+                }
+            })
+    };
+
+    const replaceOrder = () => {
+        replaceLineFoods({
+            foodId: state.selectedFood.id,
+            count: state.selectedFoodCount,
+        }).then(() => history.push('/orders'))
+    };
 
     useEffect(() => {
         dispatch({ type: foodsActionTypes.FETCHING });
@@ -155,6 +190,16 @@ export const Foods = ({
                         selectedFood: null,
                         selectedFoodCount: 1,
                     })}
+                />
+            }
+            {
+                state.isOpenNewOrderDialog &&
+                <NewOrderConfirmDialog
+                    isOpen={state.isOpenNewOrderDialog}
+                    onClose={() => setState({ ...state, isOpenNewOrderDialog: false })}
+                    existingResutaurautName={state.existingResutaurautName}
+                    newResutaurautName={state.newResutaurautName}
+                    onClickSubmit={() => replaceOrder()}
                 />
             }
         </Fragment>
