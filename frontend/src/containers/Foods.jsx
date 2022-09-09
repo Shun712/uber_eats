@@ -78,8 +78,8 @@ export const Foods = ({
         selectedFood: null,
         selectedFoodCount: 1,
         isOpenNewOrderDialog: false,
-        existingResutaurautName: '',
-        newResutaurautName: '',
+        existingRestaurantName: '',
+        newRestaurantName: '',
     }
     const [state, setState] = useState(initialState);
 
@@ -94,8 +94,8 @@ export const Foods = ({
                         ...state,
                         isOpenOrderDialog: false,
                         isOpenNewOrderDialog: true,
-                        existingResutaurautName: e.response.data.existing_restaurant,
-                        newResutaurautName: e.response.data.new_restaurant,
+                        existingRestaurantName: e.response.data.existing_restaurant,
+                        newRestaurantName: e.response.data.new_restaurant,
                     })
                 } else {
                     throw e;
@@ -197,8 +197,8 @@ export const Foods = ({
                 <NewOrderConfirmDialog
                     isOpen={state.isOpenNewOrderDialog}
                     onClose={() => setState({ ...state, isOpenNewOrderDialog: false })}
-                    existingResutaurautName={state.existingResutaurautName}
-                    newResutaurautName={state.newResutaurautName}
+                    existingRestaurantName={state.existingRestaurantName}
+                    newRestaurantName={state.newRestaurantName}
                     onClickSubmit={() => replaceOrder()}
                 />
             }
