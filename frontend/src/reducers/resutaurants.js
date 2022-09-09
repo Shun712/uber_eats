@@ -23,6 +23,7 @@ export const restaurantsReducer = (state, action) => {
             };
         case restaurantsActionTypes.FETCH_SUCCESS:
             return {
+                // fetchStateの変更と、payloadに渡したデータがrestaurantsListに入れられます。もちろんこれらのデータはstateに入る。
                 fetchState: REQUEST_STATE.OK,
                 restaurantsList: action.payload.restaurants,
             };
