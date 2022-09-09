@@ -17,7 +17,7 @@ export const restaurantsReducer = (state, action) => {
     switch (action.type) {
         case restaurantsActionTypes.FETCHING:
             return {
-                // state: state,
+                // 配列は...stateとする。
                 ...state,
                 fetchState: REQUEST_STATE.LOADING,
             };
