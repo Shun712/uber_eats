@@ -1,18 +1,23 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 
+// api
+import { fetchFoods } from "../apis/foods";
 
 export const Foods = ({
     // matchオブジェクトを受け取る
     match
     }) => {
+    useEffect(() => {
+        // matchオブジェクトを通じてURLに含まれるidを取得
+        fetchFoods(match.params.restaurantsId)
+            .then((data) =>
+                console.log(data)
+            )
+    }, [])
+
     return (
         <Fragment>
             フード一覧
-            {/* match.params.hogeのかたちでパラメーターを抽出する */}
-            {/* http://localhost:3000/restaurants/1/foodsのようなURLを返す */}
-            <p>
-                restaurantsIdは{match.params.restaurantsId}です
-            </p>
         </Fragment>
     )
 }
